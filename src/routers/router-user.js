@@ -1,6 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const jwt = require("jsonwebtoken");
+const sharp = require("sharp");
 
 const multer = require("multer");
 const upload = multer({
@@ -208,7 +209,12 @@ router.post(
    auth,
    upload.single("avatar"),
    async (req, res) => {
-      req.user.avatar = req.file.buffer;
+      const buffer = await sharp(req.file.buffer)
+         .resize({ width: 250, height: 250 })
+         .png()
+         .toBuffer();
+      req.user.avatar = buffer;
+
       await req.user.save();
       res.sendStatus(200);
    },
@@ -218,6 +224,15 @@ router.post(
 );
 
 // @path    /users/profile/avatar
+// @desc    delete user avatar
+// @access  PRIVATE
+router.delete("/users/profile/avatar", auth, async (req, res) => {
+   req.user.avatar = undefined;
+   await req.user.save();
+   res.sendStatus(200);
+});
+
+// @path    /users/:id/avatar
 // @desc    get user avatar
 // @access  PRIVATE
 router.get("/users/:id/avatar", async (req, res) => {
@@ -228,7 +243,7 @@ router.get("/users/:id/avatar", async (req, res) => {
          throw new Error();
       }
 
-      res.set("Content-Type", "image/jpg");
+      res.set("Content-Type", "image/png");
       res.send(user.avatar);
    } catch (err) {
       res.sendStatus(404);
