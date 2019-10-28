@@ -1,14 +1,12 @@
 const express = require("express");
 require("./db/mongoose");
 
-const config = require("../config/config");
-
 // routers
 const userRouter = require("./routers/router-user");
 const taskRouter = require("./routers/router-task");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 // automatically parse request/response object
 app.use(express.json());

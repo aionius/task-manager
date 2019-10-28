@@ -4,7 +4,6 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const config = require("../../../config/config");
 const Task = require("./Task");
 
 const UserSchema = new Schema(
@@ -89,7 +88,7 @@ UserSchema.methods.generateAuthToken = async function() {
    const user = this;
    const token = jwt.sign(
       { _id: user._id.toString() },
-      config.secretOrPrivateKey,
+      process.env.SECRET_OR_PRIVATE_KEY,
       { expiresIn: "30m" }
    );
 

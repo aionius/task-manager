@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
-const config = require("../../config/config");
 
 const mongoURL =
    "mongodb://" +
-   config.dbUsername +
+   process.env.MLAB_DB_USERNAME +
    ":" +
-   config.dbPassword +
-   "@ds229088.mlab.com:29088/task-manager-api";
+   process.env.MLAB_DB_PASSWORD +
+   process.env.MLAB_URL;
 
 mongoose.connect(mongoURL, {
    useNewUrlParser: true,
    useCreateIndex: true,
-   useFindAndModify: false
+   useFindAndModify: false,
+   useUnifiedTopology: true
 });
