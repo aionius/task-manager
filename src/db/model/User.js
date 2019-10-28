@@ -7,53 +7,61 @@ const jwt = require("jsonwebtoken");
 const config = require("../../../config/config");
 const Task = require("./Task");
 
-const UserSchema = new Schema({
-   name: {
-      type: String,
-      required: true,
-      trim: true
-   },
-   email: {
-      type: String,
-      unique: true,
-      required: true,
-      trim: true,
-      lowercase: true,
-      validate(value) {
-         if (!validator.isEmail(value)) {
-            throw new Error("Email is invalid.");
+const UserSchema = new Schema(
+   {
+      name: {
+         type: String,
+         required: true,
+         trim: true
+      },
+      email: {
+         type: String,
+         unique: true,
+         required: true,
+         trim: true,
+         lowercase: true,
+         validate(value) {
+            if (!validator.isEmail(value)) {
+               throw new Error("Email is invalid.");
+            }
          }
+      },
+      password: {
+         type: String,
+         required: true,
+         trim: true,
+         minlength: 6,
+         validate(value) {
+            if (value.toLowerCase().includes("password")) {
+               throw new Error("You can't use '" + value + "' for password.");
+            }
+         }
+      },
+      age: {
+         type: Number,
+         default: 0,
+         validate(value) {
+            if (value < 0) {
+               throw new Error("Age must be positive number.");
+            }
+         }
+      },
+      tokens: [
+         {
+            token: {
+               type: String,
+               required: true
+            }
+         }
+      ],
+      avatar: {
+         type: Buffer
       }
    },
-   password: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 6,
-      validate(value) {
-         if (value.toLowerCase().includes("password")) {
-            throw new Error("You can't use '" + value + "' for password.");
-         }
-      }
-   },
-   age: {
-      type: Number,
-      default: 0,
-      validate(value) {
-         if (value < 0) {
-            throw new Error("Age must be positive number.");
-         }
-      }
-   },
-   tokens: [
-      {
-         token: {
-            type: String,
-            required: true
-         }
-      }
-   ]
-});
+   {
+      timestamps: true
+   }
+);
 
 UserSchema.virtual("tasks", {
    ref: "Task",
