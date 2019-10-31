@@ -37,7 +37,7 @@ router.post("/users", async (req, res) => {
       const token = await user.generateAuthToken();
       res.status(201).send({ user, token });
    } catch (err) {
-      res.status(400).send(err);
+      res.status(400).send({ error: err.message });
    }
 
    // user
@@ -63,7 +63,7 @@ router.post("/users/login", async (req, res) => {
       const token = await user.generateAuthToken();
 
       //   res.send({ user: user.getPublicProfile(), token });
-      res.send({ user, token });
+      res.status(200).send({ user, token });
    } catch (err) {
       res.status(400).send({ error: err.message });
    }
