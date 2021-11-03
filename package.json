@@ -27,7 +27,7 @@
       "passport": "^0.4.0",
       "passport-jwt": "^4.0.0",
       "sharp": "^0.23.1",
-      "validator": "^10.9.0"
+      "validator": "^13.7.0"
    },
    "devDependencies": {
       "env-cmd": "^10.0.1",
